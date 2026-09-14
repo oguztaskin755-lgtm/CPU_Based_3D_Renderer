@@ -49,7 +49,6 @@ add_executable(3D_Renderer
 )
 
 target_link_libraries(3D_Renderer PRIVATE SDL3::SDL3-static)
-target_link_options(3D_Renderer PRIVATE -static-libgcc -static-libstdc++)
 
 add_custom_command(TARGET 3D_Renderer POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory

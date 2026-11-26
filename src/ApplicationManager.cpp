@@ -95,14 +95,8 @@ void ApplicationManager::Setup()
 
 void ApplicationManager::HandleInputs()
 {
-    bool mouseLocked = SDL_GetWindowRelativeMouseMode(m_window.getSDLWindow());
-
     MovementInput();
-
-    if (mouseLocked)
-    {
-        MouseInput();
-    }
+    MouseInput();
 
 
     SDL_Event event;
@@ -117,10 +111,12 @@ void ApplicationManager::HandleInputs()
 
                 //If someone alt tabs from the application release the mouse, if they come back on hide it and lock it in the center
             case SDL_EVENT_WINDOW_FOCUS_LOST:
+                m_mouseLocked = false;
                 SDL_SetWindowRelativeMouseMode(m_window.getSDLWindow(), false);
                 break;
 
             case SDL_EVENT_WINDOW_FOCUS_GAINED:
+                m_mouseLocked = true;
                 SDL_SetWindowRelativeMouseMode(m_window.getSDLWindow(), true);
                 break;
 
@@ -178,7 +174,8 @@ void ApplicationManager::HandleInputs()
 
                      case SDLK_TAB:
                         //A bit getting xor by 1 will always flip its value
-                        SDL_SetWindowRelativeMouseMode(m_window.getSDLWindow(), mouseLocked ^ 1);
+                        m_mouseLocked ^= 1;
+                        SDL_SetWindowRelativeMouseMode(m_window.getSDLWindow(), m_mouseLocked);
                         break;
                 }
         }
@@ -280,9 +277,13 @@ void ApplicationManager::MouseInput()
 
     SDL_GetRelativeMouseState(&deltaMouseX, &deltaMouseY);
 
-    //Y of mouse is normally inversed
-    m_camera.yaw += deltaMouseX / 10.0f;
-    m_camera.pitch -= deltaMouseY / 10.0f;
+    if (m_mouseLocked)
+    {
+        //Y of mouse is normally reversed
+        m_camera.yaw += deltaMouseX / 10.0f;
+        m_camera.pitch -= deltaMouseY / 10.0f;
+    }
+
 
 
     m_camera.pitch = std::clamp(m_camera.pitch, -89.0f, 89.0f);

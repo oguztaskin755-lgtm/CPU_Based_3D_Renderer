@@ -30,6 +30,7 @@ private:
 
     float m_moveVar = 0.0f;
     float m_incrementMoveVar = 2.0f;
+    bool m_mouseLocked = true;
 
     void MovementInput();
     void MouseInput();

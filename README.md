@@ -50,6 +50,9 @@ Download or git clone the project then open your terminal inside the directory t
 
 ```
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+```
+
+```
 cmake --build build --config Release
 ```
 
